@@ -11,7 +11,7 @@ process.on("unhandledRejection", error => {
   throw error;
 })
 
-const {token, prefix, ownerId, ver, apikey} = JSON.parse(fs.readFileSync("./config.json", "utf-8"));
+const {token, prefix, ver, apikey} = JSON.parse(fs.readFileSync("./config.json", "utf-8"));
 
 var spammedMessages = {};
 var spamCount = {};
