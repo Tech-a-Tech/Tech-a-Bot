@@ -774,4 +774,4 @@ async function handleVid(video, message, voiceChannel, playlist = false) {
 }
 }
 
-client.login(process.env.BOT_TOKEN);
+client.login(token);
