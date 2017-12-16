@@ -1,0 +1,24 @@
+{
+  "name": "tech-a-bot",
+  "version": "1.0.0",
+  "description": "A bot made by Tech-a-Tech.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Tech-a-Tech",
+  "license": "MIT",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.2",
+    "discord.js": "^11.2.1",
+    "moment": "^2.19.3",
+    "opus": "0.0.0",
+    "opusscript": "0.0.4",
+    "reverse-string": "0.0.6",
+    "simple-youtube-api": "^5.0.0",
+    "snekfetch": "^3.6.1",
+    "xmldom": "^0.1.27",
+    "xpath": "0.0.27",
+    "ytdl-core": "^0.18.3"
+  }
+}
