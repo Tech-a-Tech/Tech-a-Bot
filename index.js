@@ -16,7 +16,8 @@ const {token, prefix, ownerId, ver, apikey} = JSON.parse(fs.readFileSync("./conf
 var spammedMessages = {};
 var spamCount = {};
 
-const youtube = new YouTube(apikey);
+const youtube = new YouTube(process.env.YT_API_KEY);
+const ownerId = "373840252655370240";
 const google = require("./google.js");
 
 var botOwner = client.users.get("373840252655370240");
