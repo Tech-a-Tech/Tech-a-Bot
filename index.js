@@ -722,6 +722,8 @@ function playSong(guild, song) {
   .on("end", reason => {
     if (reason === "Stream is not generating quickly enough.") server.textChannel.send(`Music stopped!`);
     else console.log(reason);
+    server.skippers = [];
+    server.skipRequest = 0;
     server.queue.shift();
     playSong(guild, server.queue[0]);
   })
@@ -755,6 +757,8 @@ async function handleVid(video, message, voiceChannel, playlist = false) {
       textChannel: message.channel,
       voiceChannel: voiceChannel,
       author: message.author,
+      skippers: [],
+      skipRequest: 0
       connection: null,
       queue: [],
       volume: 5,
