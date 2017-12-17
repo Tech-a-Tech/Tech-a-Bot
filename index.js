@@ -95,11 +95,10 @@ client.on("messageReactionAdd", async (reaction, user) => {
    const starredMsg = new Discord.RichEmbed()
     .setTitle("New Starred Message")
     .addField("User:", reaction.message.author.tag)
-    .addField("Message:", guild.starboard[guild.starboard.length - 1])
+    .addField("Message:", reaction.message.content)
     .setFooter(`New ⭐. Occurred on ${new Date()}`)
     .setColor(0xFFA500)
-   reaction.message.guild.channels.get(guild.starboardChannel).send({embed: starredMsg});
-   return;
+   return reaction.message.guild.channels.get(guild.starboardChannel).send({embed: starredMsg});
     }
   }
 });
