@@ -91,8 +91,8 @@ client.on("messageReactionAdd", async (reaction, user) => {
     if (user === reaction.message.author) {
       await reaction.remove().then(() => {
         return reaction.message.channel.send(":no_entry_sign: You cannot star your messages.")
-      });
-    
+      })
+    }
    guild.starboard.push(reaction.message.content);
    const starredMsg = new Discord.RichEmbed()
     .setTitle("New Starred Message")
@@ -103,7 +103,7 @@ client.on("messageReactionAdd", async (reaction, user) => {
    reaction.message.guild.channels.get(guild.starboardChannel).send({embed: starredMsg});
    return;
   }
-})
+});
 
 client.on("message", async message => {
   if (message.author.bot) return;
