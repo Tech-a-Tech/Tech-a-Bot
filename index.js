@@ -84,6 +84,27 @@ Node Version: ${process.version}`);
   client.setInterval(setRandomGame, 30000);
 });
 
+client.on("messageReactionAdd", (reaction, user) => {
+  var guild = guilds[reaction.message.guild.id];
+  if (!guild || guild.starboardChannel === null || user === client.user) return;
+  if (reaction.emoji.name === "⭐") {
+    if (user === reaction.message.author) {
+      reaction.remove();
+      return message.channel.send(":no_entry_sign: You cannot star your messages.");
+    }
+    
+   guild.starboard.push(reaction.message.content);
+   const starredMsg = new Discord.RichEmbed()
+    .setTitle("New Starred Message")
+    .addField("User:", reaction.message.author.tag)
+    .addField("Message:", guild.starboard[guild.starboard.length - 1])
+    .setFooter(`New ⭐. Occurred on ${new Date()}`)
+    .setColor(0xFFA500)
+   reaction.message.guild.channels.get(guild.starboardChannel).send({embed: starredMsg});
+   return;
+  }
+})
+
 client.on("message", async message => {
   if (message.author.bot) return;
 
@@ -92,7 +113,9 @@ client.on("message", async message => {
   if (!guilds[message.guild.id]) {
     guilds[message.guild.id] = {
       spamFiltering: false,
-      warningsChannel: null
+      warningsChannel: null,
+      starboardChannel: null,
+      starboard: []
     }
   }
 
@@ -154,10 +177,10 @@ client.on("message", async message => {
       const helpembed = new Discord.RichEmbed()
         .addField("Fun Commands:", "8ball/eightball\nmoneyflip\nroll\nembedsay\nrate\nkiss\nmeme\nreversesay", true)
         .addField("Music Commands:", "play\nstop/end\nskip\nqueue\nnp/nowplaying\nvolume/vol", true)
-        .addField("Owner Only Commands:", "say\neval", true)
+        .addField("Owner Only Commands:", "say\neval\nshutdown", true)
         .addField("Info Commands:", "time\nuptime\nserverinfo/guildinfo/sinfo\nuinfo/userinfo\navatar\nver/version\nabout/info\ngoogle", true)
         .addField("Test Commands:", "die", true)
-        .addField("Moderation Commands:", "purge\nkick\nban\nhackban\nspamfilter\nsetwarnings", true)
+        .addField("Moderation Commands:", "purge\nkick\nban\nhackban\nspamfilter\nsetwarnings\nsetstarboard", true)
         .setColor(0xFFA500)
         .setTimestamp()
       message.channel.send({embed: helpembed});
@@ -611,7 +634,7 @@ client.on("message", async message => {
           return message.channel.send(`This server's spam filter is now **${fetchSpamFilterStatus(message.guild)}**.`);
           break;
     case "setwarnings":
-    if (!message.member.hasPermission("MANAGE_GUILD")) return message.reply(":no_entry_sign: You need `Manage Server` to use this command.");
+          if (!message.member.hasPermission("MANAGE_GUILD")) return message.reply(":no_entry_sign: You need `Manage Server` to use this command.");
           var newChannel = message.guild.channels.get(args[0]);
           if (!args[0]) {
             guildData.warningsChannel = null;
@@ -636,6 +659,25 @@ client.on("message", async message => {
     case "toesay":
           if (!args.join(" ")) return message.channel.send(":no_entry_sign: This toe is stinky, but no text spray?");
           message.channel.send(toesay(args.join(" ")), {code: true});
+          break;
+    case "setstarboard":
+          if (!message.member.hasPermission("MANAGE_GUILD")) return message.reply(":no_entry_sign: You need `Manage Server` to use this command.");
+          var newChannel2 = message.guild.channels.get(args[0]);
+          if (!args[0]) {
+            guilds[message.guild.id].starboardChannel = null;
+            message.channel.send("Successfully turned off the warnings channel.");
+            return;
+          }
+          else if (message.mentions.channels.size > 0) {
+            newChannel2 = message.mentions.channels.first();
+          }
+          else if (!newChannel2) {
+            message.channel.send(":no_entry_sign: No results found for that channel.");
+            return;
+          }
+
+          guilds[message.guild.id].starboardChannel = newChannel2.id;
+          return message.channel.send(`Set the starboard channel to ${newChannel2.toString()}!`);
           break;
     default:
       if (!cmd) return;
