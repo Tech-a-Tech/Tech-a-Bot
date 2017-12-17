@@ -90,8 +90,6 @@ client.on("messageReactionAdd", async (reaction, user) => {
   if (reaction.emoji.name === "⭐") {
     if (user === reaction.message.author) {
       reaction.remove(user).then(() => reaction.message.channel.send(":no_entry_sign: You cannot star your messages."))
-    } else if (reaction.message.embeds) {
-      reaction.remove(user).then(() => reaction.message.channel.send(":no_entry_sign: Embeds cannot be starred."))
     } else {
    guild.starboard.push(reaction.message.content);
    const starredMsg = new Discord.RichEmbed()
