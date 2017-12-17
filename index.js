@@ -129,6 +129,7 @@ client.on("message", async message => {
   matched = true;
 
   if (!message.content.startsWith(prefix)) return;
+  if (message.content.startsWith(prefix)) message.channel.startTyping();
 
   switch (cmd) {
     case "ping":
@@ -640,6 +641,7 @@ client.on("message", async message => {
     default:
       if (!cmd) return;
       matched = false;
+      message.channel.stopTyping(true);
       message.channel.send(`:no_entry_sign: Unknown command ${cmd}. For a list of commands, type **${prefix}help**.`);
   }
 });
