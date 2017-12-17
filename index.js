@@ -90,6 +90,8 @@ client.on("messageReactionAdd", async (reaction, user) => {
   if (reaction.emoji.name === "⭐") {
     if (user === reaction.message.author) {
       reaction.remove(user).then(() => reaction.message.channel.send(":no_entry_sign: You cannot star your messages."))
+    } else if (reaction.message.embeds) {
+      reaction.remove(user).then(() => reaction.message.channel.send(":no_entry_sign: Embeds cannot be starred."))
     } else {
    guild.starboard.push(reaction.message.content);
    const starredMsg = new Discord.RichEmbed()
@@ -664,7 +666,7 @@ client.on("message", async message => {
           var newChannel2 = message.guild.channels.get(args[0]);
           if (!args[0]) {
             guilds[message.guild.id].starboardChannel = null;
-            message.channel.send("Successfully turned off the warnings channel.");
+            message.channel.send("Successfully turned off the starboard channel.");
             return;
           }
           else if (message.mentions.channels.size > 0) {
