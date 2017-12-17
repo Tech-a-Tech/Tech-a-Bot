@@ -84,7 +84,7 @@ Node Version: ${process.version}`);
   client.setInterval(setRandomGame, 30000);
 });
 
-client.on("messageReactionAdd", (reaction, user) => {
+client.on("messageReactionAdd", async (reaction, user) => {
   var guild = guilds[reaction.message.guild.id];
   if (!guild || guild.starboardChannel === null || user === client.user) return;
   if (reaction.emoji.name === "⭐") {
