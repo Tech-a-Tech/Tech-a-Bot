@@ -652,9 +652,7 @@ function randomNumber(next) {
 }
 
 function randomHex() {
-  "#" + "0123456789abcdef".split("").map((v, i, a) => {
-     return i > 5 ? null : a[Math.floor(Math.random() * 16)]
-  }).join("");
+  return "#" + Math.floor(Math.random() * 16777215).toString(16);
 }
 
 function getAvatarID(user) {
