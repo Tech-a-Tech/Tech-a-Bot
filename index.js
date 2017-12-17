@@ -89,8 +89,9 @@ client.on("messageReactionAdd", (reaction, user) => {
   if (!guild || guild.starboardChannel === null || user === client.user) return;
   if (reaction.emoji.name === "⭐") {
     if (user === reaction.message.author) {
-      reaction.remove();
-      return message.channel.send(":no_entry_sign: You cannot star your messages.");
+      reaction.remove().then(() => {
+         return reaction.message.channel.send(":no_entry_sign: You cannot star your messages.");
+      })
     }
     
    guild.starboard.push(reaction.message.content);
