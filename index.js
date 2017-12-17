@@ -267,15 +267,15 @@ client.on("message", async message => {
         if (!code) return message.channel.send(":no_entry_sign: You must provide code to evaluate.");
 
         const embed = new Discord.RichEmbed()
-          .addField(":inbox_tray: Input:", `\`\`\`js\n${clean(code)}\`\`\``)
-          .addField(":outbox_tray: Output:", `\`\`\`js\n${clean(evaled)}\`\`\``)
+          .addField(":arrow_up: Input:", `\`\`\`js\n${clean(code)}\`\`\``)
+          .addField(":arrow_down: Output:", `\`\`\`js\n${clean(evaled)}\`\`\``)
           .setColor(3447003)
           .setFooter(`Evaled By: ${message.author.tag}`, message.author.displayAvatarURL)
         return message.channel.send({embed: embed});
       } catch (error) {
         const errorE = new Discord.RichEmbed()
-          .addField(":inbox_tray: Input:", `\`\`\`js\n${clean(code)}\`\`\``)
-          .addField(":outbox_tray: Output: (Error)", `\`\`\`js\n${clean(error)}\`\`\``)
+          .addField(":arrow_up: Input:", `\`\`\`js\n${clean(code)}\`\`\``)
+          .addField(":arrow_down: Output: (Error)", `\`\`\`js\n${clean(error)}\`\`\``)
           .setColor(0xff0000)
           .setFooter(`Evaled By: ${message.author.tag}`, message.author.displayAvatarURL)
         return message.channel.send({embed: errorE});
