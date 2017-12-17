@@ -758,7 +758,7 @@ async function handleVid(video, message, voiceChannel, playlist = false) {
       voiceChannel: voiceChannel,
       author: message.author,
       skippers: [],
-      skipRequest: 0
+      skipRequest: 0,
       connection: null,
       queue: [],
       volume: 5,
