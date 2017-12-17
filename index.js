@@ -236,7 +236,7 @@ client.on("message", async message => {
     case "skip":
     if (!message.member.hasPermission("MUTE_MEMBERS")) return message.channel.send(":no_entry_sign: You need `Mute Members` to use this command.");
       if (!server) return message.channel.send(":no_entry_sign: No song is playing at the moment.");
-      if (server.skippers.includes(message.author.id)) return message.channel.send(":no_entry_sign: You have already placed a vote to skip this song.");
+      if (server.skippers.indexOf(message.author.id) !== -1) return message.channel.send(":no_entry_sign: You have already placed a vote to skip this song.");
       server.skippers.push(message.author.id);
       server.skipRequest++;
       if (server.skipRequest >= Math.ceil((server.voiceChannel.members.size - 1) / 2)) {
@@ -245,6 +245,7 @@ client.on("message", async message => {
       } else {
         message.channel.send(`You have successfully been counted as a vote to skip. To skip this song, **${Math.ceil((server.voiceChannel.members.size - 1) / 2) - server.skipRequest}** more votes are needed.`);
       }
+      break;
       break;
     case "queue":
       if (!server) return message.channel.send(":no_entry_sign: No songs are enqueued at the moment.");
