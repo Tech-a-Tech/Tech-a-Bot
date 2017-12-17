@@ -234,18 +234,9 @@ client.on("message", async message => {
       server.connection.dispatcher.end("The music has been stopped using the stop command.");
       break;
     case "skip":
-    if (!message.member.hasPermission("MUTE_MEMBERS")) return message.channel.send(":no_entry_sign: You need `Mute Members` to use this command.");
-      if (!server) return message.channel.send(":no_entry_sign: No song is playing at the moment.");
-      if (server.skippers.indexOf(message.author.id) !== -1) return message.channel.send(":no_entry_sign: You have already placed a vote to skip this song.");
-      server.skippers.push(message.author.id);
-      server.skipRequest++;
-      if (server.skipRequest >= Math.ceil((server.voiceChannel.members.size - 1) / 2)) {
-        server.connection.dispatcher.end("Music skipped.");
-        message.channel.send("You have successfully been counted as a vote to skip, and looks like everyone voted. Skipped song!");
-      } else {
-        message.channel.send(`You have successfully been counted as a vote to skip. To skip this song, **${Math.ceil((server.voiceChannel.members.size - 1) / 2) - server.skipRequest}** more votes are needed.`);
-      }
-      break;
+        if (!message.member.hasPermission("MUTE_MEMBERS")) return message.channel.send(":no_entry_sign: You need `Mute Members` to use this command.");
+        if (!server) return message.channel.send(":no_entry_sign: No song is playing at the moment.");
+        server.connection.dispatcher.end("The music has been skipped using the skip command.")
       break;
     case "queue":
       if (!server) return message.channel.send(":no_entry_sign: No songs are enqueued at the moment.");
@@ -696,16 +687,6 @@ function clean(text) {
   }
 }
 
-function spamFilterHelper(oldM, newM) {
-  var message;
-  if (message == null) {
-    message = oldM;
-  } else {
-    message = newM;
-  }
-  var m = message.content;
-}
-
 function playSong(guild, song) {
   var server = servers.get(guild.id);
 
@@ -722,8 +703,6 @@ function playSong(guild, song) {
   .on("end", reason => {
     if (reason === "Stream is not generating quickly enough.") server.textChannel.send(`Music stopped!`);
     else console.log(reason);
-    server.skippers = [];
-    server.skipRequest = 0;
     server.queue.shift();
     playSong(guild, server.queue[0]);
   })
@@ -757,8 +736,6 @@ async function handleVid(video, message, voiceChannel, playlist = false) {
       textChannel: message.channel,
       voiceChannel: voiceChannel,
       author: message.author,
-      skippers: [],
-      skipRequest: 0,
       connection: null,
       queue: [],
       volume: 5,
