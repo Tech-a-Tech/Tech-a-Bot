@@ -89,9 +89,10 @@ client.on("messageReactionAdd", (reaction, user) => {
   if (!guild || guild.starboardChannel === null || user === client.user) return;
   if (reaction.emoji.name === "⭐") {
     if (user === reaction.message.author) {
-      reaction.remove().then(() => reaction.message.channel.send(":no_entry_sign: You cannot star your messages."));
-      return;
-    }
+      reaction.remove().then(() => {
+        reaction.message.channel.send(":no_entry_sign: You cannot star your messages.")
+      });
+    } else {
     
    guild.starboard.push(reaction.message.content);
    const starredMsg = new Discord.RichEmbed()
@@ -102,6 +103,7 @@ client.on("messageReactionAdd", (reaction, user) => {
     .setColor(0xFFA500)
    reaction.message.guild.channels.get(guild.starboardChannel).send({embed: starredMsg});
    return;
+    }
   }
 })
 
