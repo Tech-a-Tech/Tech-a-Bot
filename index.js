@@ -652,16 +652,14 @@ function randomNumber(next) {
 }
 
 function randomHex() {
-  return "#" + Math.floor(Math.random() * 16777215).toString(16);
+  "#" + "0123456789abcdef".split("").map((v, i, a) => {
+     return i > 5 ? null : a[Math.floor(Math.random() * 16)]
+  }).join("");
 }
 
 function getAvatarID(user) {
   if (!user.avatar) return "Nothing";
   else return user.avatar;
-}
-
-function banSize(guild) {
-  return guild.fetchBans().then(bans => bans.size);
 }
 
 function getGame(user) {
