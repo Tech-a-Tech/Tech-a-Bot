@@ -17,10 +17,9 @@ var spammedMessages = {};
 var spamCount = {};
 
 const youtube = new YouTube(process.env.YT_API_KEY);
-const ownerId = "373840252655370240";
 const google = require("./google.js");
 
-var botOwner = client.users.get("373840252655370240");
+var ownerId = "373840252655370240";
 
 var servers = new Map();
 var guilds = {};
@@ -69,9 +68,9 @@ var statusesToChoose = [
 
 client.on("error", console.error);
 client.on("warn", console.warn);
+client.on("debug", console.info);
 client.on("disconnect", () => console.log("Now disconnected."));
 client.on("reconnecting", () => console.log("Reconnecting."));
-
 client.on("ready", () => {
   console.log(`
 Tech-a-Bot (${ver}) details:
@@ -87,6 +86,7 @@ Node Version: ${process.version}`);
 
 client.on("message", async message => {
   if (message.author.bot) return;
+
   if (message.channel.type === "dm") return;
 
   if (!guilds[message.guild.id]) {
@@ -152,7 +152,7 @@ client.on("message", async message => {
       break;
     case "help":
       const helpembed = new Discord.RichEmbed()
-        .addField("Fun Commands:", "8ball/eightball\nmoneyflip\nroll\nembedsay\nrate\nkiss\nmeme\nreversesay\ntoesay", true)
+        .addField("Fun Commands:", "8ball/eightball\nmoneyflip\nroll\nembedsay\nrate\nkiss\nmeme\nreversesay", true)
         .addField("Music Commands:", "play\nstop/end\nskip\nqueue\nnp/nowplaying\nvolume/vol", true)
         .addField("Owner Only Commands:", "say\neval", true)
         .addField("Info Commands:", "time\nuptime\nserverinfo/guildinfo/sinfo\nuinfo/userinfo\navatar\nver/version\nabout/info\ngoogle", true)
