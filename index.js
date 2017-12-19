@@ -176,7 +176,7 @@ client.on("message", async message => {
         .addField("Fun Commands:", "8ball/eightball\nmoneyflip\nroll\nembedsay\nrate\nkiss\nmeme\nreversesay", true)
         .addField("Music Commands:", "play\nstop/end\nskip\nqueue\nnp/nowplaying\nvolume/vol", true)
         .addField("Owner Only Commands:", "say\neval\nshutdown", true)
-        .addField("Info Commands:", "time\nuptime\nserverinfo/guildinfo/sinfo\nuinfo/userinfo\navatar\nver/version\nabout/info\ngoogle", true)
+        .addField("Info Commands:", "time\nuptime\nserverinfo/guildinfo/sinfo\nuinfo/userinfo\navatar\nver/version\nabout/info\ngoogle\ninvite", true)
         .addField("Test Commands:", "die", true)
         .addField("Moderation Commands:", "purge\nkick\nban\nhackban\nspamfilter\nsetwarnings\nsetstarboard", true)
         .setColor(0xFFA500)
@@ -677,6 +677,9 @@ client.on("message", async message => {
           guilds[message.guild.id].starboardChannel = newChannel2.id;
           return message.channel.send(`Set the starboard channel to ${newChannel2.toString()}!`);
           break;
+    case "invite":
+       message.channel.send("Invite link to add me to your server! https://discordapp.com/oauth2/authorize?client_id=374319373487439884&permissions=8&scope=bot");
+       break;
     default:
       if (!cmd) return;
       matched = false;
