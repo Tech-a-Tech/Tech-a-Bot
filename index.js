@@ -171,7 +171,7 @@ client.on("message", async message => {
         .addField("Owner Only Commands:", "say\neval", true)
         .addField("Info Commands:", "time\nuptime\nserverinfo/guildinfo/sinfo\nuinfo/userinfo\navatar\nver/version\nabout/info\ngoogle\ninvite", true)
         .addField("Test Commands:", "die", true)
-        .addField("Moderation Commands:", "purge\nkick\nban\nhackban\nspamfilter\nsetwarnings\nsetstarboard\nmute", true)
+        .addField("Moderation Commands:", "purge\nkick\nban\nhackban\nspamfilter\nsetwarnings\nsetstarboard", true)
         .setColor(0xFFA500)
         .setTimestamp()
       message.channel.send({embed: helpembed});
@@ -638,43 +638,6 @@ client.on("message", async message => {
     case "invite":
        message.channel.send("Invite link to add me to your server! https://discordapp.com/oauth2/authorize?client_id=374319373487439884&permissions=8&scope=bot");
        break;
-    case "mute":
-      if (!message.member.hasPermission("MUTE_MEMBERS")) return message.channel.send(":no_entry_sign: You need `Mute Members` to use this command.");
-      var muteuser = message.mentions.users.first();
-      var time = parseInt(args.slice(1).join(" "));
-      var muterole = message.guild.roles.find("name", "Muted");
-      if (message.mentions.users.size < 1) return message.channel.send(":no_entry_sign: Please mention a user.");
-      if (muteuser === message.author) return message.channel.send(":no_entry_sign: You cannot mute yourself.");
-      if (muteuser === client.user) return message.channel.send(":no_entry_sign: You cannot mute me.");
-      if (!muterole) return message.reply(":no_entry_sign: Sorry about this, but *gulp* you need a role called Muted to do the trick. DON'T REMOVE ME FOR THIS! HAVE MERCY!")
-      if (!time) return message.reply(":no_entry_sign: You need to provide how long you want to mute this user.");
-      if (message.guild.member(muteuser).roles.find("name", "Muted")) return message.reply(":no_entry_sign: This user already has been muted.");
-      message.channel.send(":red_circle: Do you want to mute " + muteuser.tag + "? Confirm with `yes`. You have 25 seconds to respond with (y/n).");
-      try {
-        var muteyornoR = await message.channel.awaitMessages(c => c.author.id === message.author.id && c.content.toLowerCase() === "y" || c.content.toLowerCase() === "yes" || c.content.toLowerCase() === "n" || c.content.toLowerCase() === "no", {
-          maxMatches: 1,
-          time: 25000,
-          errors: ["time"]
-        });
-        var mutecont = muteyornoR.first().content.toLowerCase();
-        if (mutecont === "yes" || mutecont === "y") {
-          message.guild.member(muteuser).addRole(muterole.id);
-            message.channel.send(":mute: Muted " + muteuser.tag + " for " + time + ".");
-          setTimeout(() => {
-            message.guild.member(muteuser).removeRole(muterole.id);
-            message.channel.send(":loud_sound: Unmuted " + muteuser.tag + ".");
-        }, ms(time))
-        }
-        if (mutecont === "no" || mutecont === "n") {
-          return message.channel.send(":no_entry_sign: The moderator responded with `no`. The command has been cancelled.")
-        }
-    } catch (error) {
-      console.error(error);
-      return message.channel.send(":no_entry_sign: No response was entered. The command has been cancelled.")
-    }
-
-      break;
-
     default:
       if (!cmd) return;
       matched = false;
