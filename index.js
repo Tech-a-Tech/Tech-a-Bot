@@ -659,16 +659,14 @@ client.on("message", async message => {
         var mutecont = muteyornoR.first().content.toLowerCase();
         if (mutecont === "yes" || mutecont === "y") {
           message.guild.member(muteuser).addRole(muterole.id).then(() => {
-            message.channel.send(":mute: Muted " + muteuser.tag + ".");
+            message.channel.send(":mute: Muted " + muteuser.tag + " for " + ms(time, {long: true}) + ".");
           })
-        }
-        setTimeout(() => {
-           message.guild.member(muteuser).removeRole(muterole.id).then(() => {
+          setTimeout(() => {
+            message.guild.member(muteuser).removeRole(muterole.id).then(() => {
             message.channel.send(":loud_soung: Unmuted " + muteuser.tag + ".");
           })
-        }, ms(time, {
-          long: true
-        }))
+        }, ms(time, {long: true}))
+        }
         if (mutecont === "no" || mutecont === "n") {
           return message.channel.send(":no_entry_sign: The moderator responded with `no`. The command has been cancelled.")
         }
