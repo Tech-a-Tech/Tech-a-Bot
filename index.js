@@ -658,13 +658,11 @@ client.on("message", async message => {
         });
         var mutecont = muteyornoR.first().content.toLowerCase();
         if (mutecont === "yes" || mutecont === "y") {
-          message.guild.member(muteuser).addRole(muterole.id).then(() => {
+          message.guild.member(muteuser).addRole(muterole.id);
             message.channel.send(":mute: Muted " + muteuser.tag + " for " + time + ".");
-          })
           setTimeout(() => {
-            message.guild.member(muteuser).removeRole(muterole.id).then(() => {
+            message.guild.member(muteuser).removeRole(muterole.id);
             message.channel.send(":loud_sound: Unmuted " + muteuser.tag + ".");
-          })
         }, ms(time))
         }
         if (mutecont === "no" || mutecont === "n") {
