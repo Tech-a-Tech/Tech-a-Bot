@@ -247,8 +247,8 @@ client.on("message", async message => {
       server.connection.dispatcher.end("The music has been stopped using the stop command.");
       break;
     case "skip":
-        if (message.author.id !== server.queue[0].requester.id) return message.channel.send(":no_entry_sign: You wanna skip this song? Gotta be the one who requested it!");
         if (!server) return message.channel.send(":no_entry_sign: No song is playing at the moment.");
+         if (message.author.id !== server.queue[0].requester.id) return message.channel.send(":no_entry_sign: You wanna skip this song? Gotta be the one who requested it!");
         server.connection.dispatcher.end("The music has been skipped using the skip command.")
       break;
     case "queue":
