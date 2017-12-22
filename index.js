@@ -60,17 +60,9 @@ var games = [
   "piro"
 ];
 
-var statusesToChoose = [
-  "online",
-  "idle",
-  "dnd"
-];
-
 client.on("error", console.error);
 client.on("warn", console.warn);
 client.on("debug", console.info);
-client.on("disconnect", () => console.log("Now disconnected."));
-client.on("reconnecting", () => console.log("Reconnecting."));
 client.on("ready", () => {
   console.log(`
 Tech-a-Bot (${ver}) details:
@@ -84,7 +76,7 @@ Node Version: ${process.version}`);
   client.setInterval(setRandomGame, 30000);
 });
 
-client.on("messageReactionAdd", async (reaction, user) => {
+client.on("messageReactionAdd", (reaction, user) => {
   var guild = guilds[reaction.message.guild.id];
   if (!guild || guild.starboardChannel === null || user === client.user) return;
   if (reaction.emoji.name === "⭐") {
@@ -96,7 +88,7 @@ client.on("messageReactionAdd", async (reaction, user) => {
     .setTitle("New Starred Message")
     .addField("User:", reaction.message.author.tag)
     .addField("Message:", reaction.message.content)
-    .setFooter(`New ⭐. Occurred on ${new Date()}`)
+    .setFooter(`New ⭐. Occurred on ${reaction.message.createdAt}`)
     .setColor(0xFFA500)
    return reaction.message.guild.channels.get(guild.starboardChannel).send({embed: starredMsg});
     }
@@ -175,7 +167,7 @@ client.on("message", async message => {
       const helpembed = new Discord.RichEmbed()
         .addField("Fun Commands:", "8ball/eightball\nmoneyflip\nroll\nembedsay\nrate\nkiss\nmeme\nreversesay", true)
         .addField("Music Commands:", "play\nstop/end\nskip\nqueue\nnp/nowplaying\nvolume/vol", true)
-        .addField("Owner Only Commands:", "say\neval\nshutdown", true)
+        .addField("Owner Only Commands:", "say\neval\nrestart/reboot", true)
         .addField("Info Commands:", "time\nuptime\nserverinfo/guildinfo/sinfo\nuinfo/userinfo\navatar\nver/version\nabout/info\ngoogle\ninvite", true)
         .addField("Test Commands:", "die", true)
         .addField("Moderation Commands:", "purge\nkick\nban\nhackban\nspamfilter\nsetwarnings\nsetstarboard", true)
@@ -255,7 +247,7 @@ client.on("message", async message => {
       server.connection.dispatcher.end("The music has been stopped using the stop command.");
       break;
     case "skip":
-        if (!message.member.hasPermission("MUTE_MEMBERS")) return message.channel.send(":no_entry_sign: You need `Mute Members` to use this command.");
+        if (message.author.id !== server.queue[0].requester.id) return message.channel.send(":no_entry_sign: You wanna skip this song? Gotta be the one who requested it!");
         if (!server) return message.channel.send(":no_entry_sign: No song is playing at the moment.");
         server.connection.dispatcher.end("The music has been skipped using the skip command.")
       break;
@@ -303,16 +295,13 @@ client.on("message", async message => {
       }
       break;
     case "time":
-      message.channel.send(`:alarm_clock: Current time: **${moment().format("hh:")}${moment().format("mm")}**`);
+      message.channel.send(`:alarm_clock: Current time: **${moment().format("hh:mm")}**`);
       break;
-    case "shutdown":
+    case "reboot":
+    case "restart":
       if (message.author.id !== ownerId) return;
 
-      var exitCode = parseInt(args[0]);
-      if (!exitCode) exitCode = 0;
-      if (exitCode > 1) return message.channel.send(":no_entry_sign: The exit code must be `0` or `1`.");
-
-      message.channel.send(":red_circle: Do you want to shutdown the bot? Confirm with `yes`. You have 25 seconds to respond with (y/n).");
+      message.channel.send(":red_circle: Do you want to restart the bot? Confirm with `yes`. You have 25 seconds to respond with (y/n).");
       try {
         var awaited = await message.channel.awaitMessages(x => x.author.id === message.author.id && x.content.toLowerCase() === "y" || x.author.id === message.author.id && x.content.toLowerCase() === "yes" || x.author.id === message.author.id && x.content.toLowerCase() === "n" || x.content.toLowerCase() === "no", {
           maxMatches: 1,
@@ -321,13 +310,13 @@ client.on("message", async message => {
         });
         var response = awaited.first().content.toLowerCase();
         if (response === "y" || response === "yes") {
-          message.channel.send(":wave: Goodbye... I'm shutting down...").then(() => {
+          message.channel.send(":wave: Goodbye. Beginning to restart bot.").then(() => {
             client.destroy(err => {
               console.error(err);
             })
 
             setTimeout(() => {
-              console.log(`Shutdown with exit code ${exitCode}.`);
+              console.log("Bot is now rebooting.");
               process.exit(0);
             }, 3000);
           })
@@ -582,11 +571,12 @@ client.on("message", async message => {
     case "info":
       const botInfo = new Discord.RichEmbed()
         .setAuthor(`Information for ${client.user.username}!`, client.user.displayAvatarURL)
-        .addField("Bot Owner:", "Tech-a-Tech#3963", true)
+        .addField("Bot Owner:", client.users.get(ownerId).tag, true)
         .addField("Version:", ver, true)
+        .addField("Language:", "Node.JS\nDiscord.JS", true)
         .addField("Prefix:", prefix, true)
         .setDescription("**NOTE:** This bot is still under development. If you find any issues, be sure to let me know!")
-        .addField("Useful Links!", "[Invite Link](https://discordapp.com/oauth2/authorize?client_id=374319373487439884&scope=bot&permissions=8)\n[Owner's Discord Server](https://discord.gg/h3t9peK)")
+        .addField("Useful Links!", "[Bot Invite Link](https://discordapp.com/oauth2/authorize?client_id=374319373487439884&scope=bot&permissions=8)\n[Owner's Discord Server](https://discord.gg/h3t9peK)")
         .setColor(0xFFA500)
         .setFooter(`Requested By: ${message.author.tag}`, message.author.displayAvatarURL)
       message.channel.send({embed: botInfo})
@@ -602,8 +592,7 @@ client.on("message", async message => {
       break;
     case "google":
       if (!args.join(" ")) return message.channel.send(":no_entry_sign: Please enter something to search.");
-        google.search(args.join(" "), message.channel && message.channel.nsfw)
-          .then(({ card, results }) => {
+        google.search(args.join(" "), message.channel && message.channel.nsfw).then(({card, results}) => {
             if (card) {
               message.channel.send(card);
             } else if (results.length) {
@@ -687,7 +676,7 @@ client.on("message", async message => {
   }
 });
 
-function randomNumber(next) {
+function randomNumber(next = 1) {
   if (typeof(next) !== "number") {
     throw new TypeError("Parameter \"next\" must be a number, not a string");
   }
@@ -734,6 +723,7 @@ function playSong(guild, song) {
   var server = servers.get(guild.id);
 
   if (!song) {
+    server.textChannel.send("Music stopped because of an empty queue.");
     server.voiceChannel.leave();
     servers.delete(guild.id);
     return;
@@ -744,7 +734,7 @@ function playSong(guild, song) {
     quality: "lowest"
   }))
   .on("end", reason => {
-    if (reason === "Stream is not generating quickly enough.") server.textChannel.send(`Music stopped!`);
+    if (reason === "Stream is not generating quickly enough.") server.textChannel.send(`Music stopped, now playing the next song in the queue.`);
     else console.log(reason);
     server.queue.shift();
     playSong(guild, server.queue[0]);
@@ -771,6 +761,7 @@ async function handleVid(video, message, voiceChannel, playlist = false) {
     title: video.title,
     id: video.id,
     url: `https://www.youtube.com/watch?v=${video.id}`,
+    requester: message.author,
     minutes: video.duration.minutes,
     seconds: getSecs(video)
   };
@@ -778,7 +769,6 @@ async function handleVid(video, message, voiceChannel, playlist = false) {
     var serverC = {
       textChannel: message.channel,
       voiceChannel: voiceChannel,
-      author: message.author,
       connection: null,
       queue: [],
       volume: 5,
