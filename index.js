@@ -73,7 +73,7 @@ Discriminator: ${client.user.discriminator}
 Version: ${ver}
 Node Version: ${process.version}`);
   setRandomGame();
-  client.setInterval(setRandomGame, 30000);
+  client.setInterval(setRandomGame, 25000);
 });
 
 client.on("messageReactionAdd", (reaction, user) => {
@@ -167,7 +167,7 @@ client.on("message", async message => {
       const helpembed = new Discord.RichEmbed()
         .addField("Fun Commands:", "8ball/eightball\nmoneyflip\nroll\nembedsay\nrate\nkiss\nmeme\nreversesay", true)
         .addField("Music Commands:", "play\nstop/end\nskip\nqueue\nnp/nowplaying\nvolume/vol", true)
-        .addField("Owner Only Commands:", "say\neval\nrestart/reboot", true)
+        .addField("Owner Only Commands:", "say\neval", true)
         .addField("Info Commands:", "time\nuptime\nserverinfo/guildinfo/sinfo\nuinfo/userinfo\navatar\nver/version\nabout/info\ngoogle\ninvite", true)
         .addField("Test Commands:", "die", true)
         .addField("Moderation Commands:", "purge\nkick\nban\nhackban\nspamfilter\nsetwarnings\nsetstarboard", true)
@@ -296,38 +296,6 @@ client.on("message", async message => {
       break;
     case "time":
       message.channel.send(`:alarm_clock: Current time: **${moment().format("hh:mm")}**`);
-      break;
-    case "reboot":
-    case "restart":
-      if (message.author.id !== ownerId) return;
-
-      message.channel.send(":red_circle: Do you want to restart the bot? Confirm with `yes`. You have 25 seconds to respond with (y/n).");
-      try {
-        var awaited = await message.channel.awaitMessages(x => x.author.id === message.author.id && x.content.toLowerCase() === "y" || x.author.id === message.author.id && x.content.toLowerCase() === "yes" || x.author.id === message.author.id && x.content.toLowerCase() === "n" || x.content.toLowerCase() === "no", {
-          maxMatches: 1,
-          time: 25000,
-          errors: ["time"]
-        });
-        var response = awaited.first().content.toLowerCase();
-        if (response === "y" || response === "yes") {
-          message.channel.send(":wave: Goodbye. Beginning to restart bot.").then(() => {
-            client.destroy(err => {
-              console.error(err);
-            })
-
-            setTimeout(() => {
-              console.log("Bot is now rebooting.");
-              process.exit(0);
-            }, 3000);
-          })
-        }
-        else if (response === "n" || response === "no") {
-          return message.channel.send(":no_entry_sign: The bot owner responded with `no`. The command has been cancelled.");
-        }
-      } catch (error) {
-        console.error(error);
-        return message.channel.send(":no_entry_sign: No response was entered. The command has been cancelled.");
-      }
       break;
     case "purge":
       if (!message.member.hasPermission("MANAGE_MESSAGES")) return message.channel.send(":no_entry_sign: You need `Manage Messages` to use this command.");
