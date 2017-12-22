@@ -665,7 +665,7 @@ client.on("message", async message => {
             message.guild.member(muteuser).removeRole(muterole.id).then(() => {
             message.channel.send(":loud_sound: Unmuted " + muteuser.tag + ".");
           })
-        }, ms(ms(time), {long: true})
+        }, ms(ms(time), {long: true}))
         }
         if (mutecont === "no" || mutecont === "n") {
           return message.channel.send(":no_entry_sign: The moderator responded with `no`. The command has been cancelled.")
