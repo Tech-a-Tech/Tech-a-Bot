@@ -713,7 +713,7 @@ function playSong(guild, song) {
   dispatcher.setVolumeLogarithmic(server.volume / 5);
   server.playing = true;
 
-  server.textChannel.send(`:musical_note: Now Playing: **${song.title}** (\`${song.minutes}:${song.seconds}\`) - Requested by: **${server.author.tag}**`)
+  server.textChannel.send(`:musical_note: Now Playing: **${song.title}** (\`${song.minutes}:${song.seconds}\`) - Requested by: **${server.queue[0].requester.tag}**`)
 }
 
 function fetchSpamFilterStatus(g) {
