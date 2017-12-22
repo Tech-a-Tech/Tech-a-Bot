@@ -704,8 +704,8 @@ function getSecs(song) {
 
 function setRandomGame() {
   client.user.setPresence({
-    status: statusesToChoose[Math.floor(Math.random() * statusesToChoose.length)],
     game: {
+      type: 0,
       name: games[Math.floor(Math.random() * games.length)]
     }
   })
