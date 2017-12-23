@@ -8,10 +8,6 @@ const ms = require("ms");
 const toesay = require("./toesay.js");
 const client = new Discord.Client({disableEveryone: true});
 
-process.on("unhandledRejection", error => {
-  throw error;
-})
-
 const {token, prefix, ver, apikey} = JSON.parse(fs.readFileSync("./config.json", "utf-8"));
 
 var spammedMessages = {};
@@ -76,7 +72,6 @@ Node Version: ${process.version}`);
   setRandomGame();
   client.setInterval(setRandomGame, 25000);
 });
-console.log("Test")
 client.on("messageReactionAdd", (reaction, user) => {
   var guild = guilds[reaction.message.guild.id];
   if (!guild || guild.starboardChannel === null || user === client.user) return;
