@@ -76,7 +76,7 @@ Node Version: ${process.version}`);
   setRandomGame();
   client.setInterval(setRandomGame, 25000);
 });
-
+console.log("Test")
 client.on("messageReactionAdd", (reaction, user) => {
   var guild = guilds[reaction.message.guild.id];
   if (!guild || guild.starboardChannel === null || user === client.user) return;
