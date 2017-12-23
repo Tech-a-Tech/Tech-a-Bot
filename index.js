@@ -409,7 +409,6 @@ client.on("message", async message => {
         'us-west': ":flag_us: West United States",
         'eu-west': ":flag_eu: Europe (Western)",
       };
-      var bans = await message.guild.fetchBans();
       const serverInfo = new Discord.RichEmbed()
         .setAuthor(`Information for ${message.guild.name}`, message.guild.iconURL)
         .addField("Name:", message.guild.name)
@@ -417,7 +416,6 @@ client.on("message", async message => {
         .addField("ID:", message.guild.id)
         .addField("Verification Level:", levels[message.guild.verificationLevel])
         .addField("Owner:", message.guild.owner.user.tag)
-        .addField("Bans:", bans.array().length, true)
         .addField("Created on:", message.guild.createdAt, true)
         .addField("Members:", `**Humans:** ${message.guild.members.filter(mem => !mem.user.bot).size}\n**Bots:** ${message.guild.members.filter(bot => bot.user.bot).size}\n**Total:** ${message.guild.memberCount}`, true)
         .addField("Channels:", `**Text:** ${message.guild.channels.filter(textChan => textChan.type === "text").size}\n**Voice:** ${message.guild.channels.filter(voiceChan => voiceChan.type === "voice").size}\n**Total:** ${message.guild.channels.size}`, true)
