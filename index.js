@@ -205,7 +205,7 @@ client.on("message", async message => {
           var video = await youtube.getVideoByID(args[0]);
         } catch (er) {
           try {
-            var vidoes = await youtube.searchVideos(args.join(" "), 1);
+            var videos = await youtube.searchVideos(args.join(" "), 1);
             var video = await youtube.getVideoByID(videos[0].id);
           } catch (err) {
             message.channel.send(":no_entry_sign: No results found for that video.");
