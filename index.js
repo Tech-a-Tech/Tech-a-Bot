@@ -205,25 +205,8 @@ client.on("message", async message => {
           var video = await youtube.getVideoByID(args[0]);
         } catch (er) {
           try {
-            var i = 0;
-            var videos = await youtube.searchVideos(args.join(" "), 10);
-            const ss = new Discord.RichEmbed()
-              .setDescription(`**Song Selection:**\nThis is a selection for a song you would like to play. Provide a number between 1 and ${videos.length}.\n**NOTE:** You have 25 seconds to choose a song.\n**Songs:**\n${videos.map(vi => `**#${++i} >** ${vi.title}`).join("\n")}`)
-              .setColor(0xFFA500)
-              .setFooter(`Requested By: ${message.author.tag}`, message.author.displayAvatarURL)
-            message.channel.send({embed: ss});
-            try {
-              var r = await message.channel.awaitMessages(q => q.author.id === message.author.id && q.content > 0 && q.content < 11, {
-                maxMatches: 1,
-                time: 25000,
-                errors: ["time"]
-              })
-            } catch (timesup) {
-              console.error(timesup);
-              return message.channel.send(":no_entry_sign: No song entered after 25 seconds!");
-            }
-            var selected = parseInt(r.first().content);
-            var video = await youtube.getVideoByID(videos[selected - 1].id);
+            var vidoes = await youtube.searchVideos(args.join(" "), 1);
+            var video = await youtube.getVideoByID(videos[0].id);
           } catch (err) {
             message.channel.send(":no_entry_sign: No results found for that video.");
             return console.error(err.stack);
