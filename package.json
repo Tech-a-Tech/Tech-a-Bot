@@ -19,6 +19,7 @@
     "simple-youtube-api": "^5.0.0",
     "snekfetch": "^3.6.1",
     "xmldom": "^0.1.27",
+    "invert-color": "^1.2.2"
     "xpath": "0.0.27",
     "ytdl-core": "^0.18.3"
   }
