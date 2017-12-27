@@ -69,7 +69,8 @@ Tag: ${client.user.tag}
 ID: ${client.user.id}
 Discriminator: ${client.user.discriminator}
 Version: ${ver}
-Node Version: ${process.version}`);
+Node Version: ${process.version}
+Ready on: ${client.readyAt}`);
   setRandomGame();
   client.setInterval(setRandomGame, 25000);
 });
