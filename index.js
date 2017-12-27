@@ -15,6 +15,7 @@ var spamCount = {};
 
 const youtube = new YouTube(process.env.YT_API_KEY);
 const google = require("./google.js");
+const colors = require("./hexes.js");
 
 var ownerId = "373840252655370240";
 
